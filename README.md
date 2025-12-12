@@ -41,7 +41,24 @@ conda activate aftershock-analysis
 
 # OR install with pip
 pip install -r requirements.txt
+```
+## Project Structure
+ESS563_FinalProject/
+├── README.md
+├── requirements.txt
+├── environment.yml
+├── aftershock_analysis.py      # Main analysis functions
+├── notebooks/
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_single_event_analysis.ipynb
+│   └── 03_temporal_evolution.ipynb
+├── figures/                     # Output figures
+└── data/                       # Data directory (not tracked)
+    ├── raw/
+    └── processed/
 
+
+## Usage
 import obspy
 import pandas as pd
 from aftershock_analysis import (
