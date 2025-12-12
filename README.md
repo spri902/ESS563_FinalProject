@@ -41,3 +41,43 @@ conda activate aftershock-analysis
 
 # OR install with pip
 pip install -r requirements.txt
+
+import obspy
+import pandas as pd
+from aftershock_analysis import (
+    extract_event_traces,
+    get_reference_waveform_for_event,
+    compare_waveforms_stretching,
+    calculate_corner_frequency,
+    analyze_temporal_evolution_robust
+)
+
+# Load data
+stream = obspy.read('path/to/seismic/data')
+df_picks = pd.read_csv('path/to/picks.csv')
+
+# Get unique events
+all_event_ids = get_unique_events(df_picks, sort_by_time=True)
+
+# Select reference and comparison events
+reference_event_id = all_event_ids[0]
+comparison_event_ids = all_event_ids[1:51:5]  # Every 5th event
+
+# Run temporal evolution analysis
+results_df, qc_stats, ref_info = analyze_temporal_evolution_robust(
+    stream, df_picks,
+    reference_event_id=reference_event_id,
+    comparison_event_ids=comparison_event_ids,
+    pulse_window_start=0.01,
+    pulse_window_end=0.04,
+    stretch_max=0.50,
+    min_stretch_cc=0.50,
+    min_alignment_cc=0.50,
+    min_snr=3.0
+)
+
+# Visualize results
+plot_temporal_evolution_robust(results_df, ref_info, show_rejected=True)
+
+# Save results
+results_df.to_csv('temporal_evolution_results.csv', index=False)
